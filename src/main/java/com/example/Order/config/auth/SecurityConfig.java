@@ -26,7 +26,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS calls for specific endpoints
-//                        .requestMatchers("/","/ws/**").permitAll() // Allow public access to certain endpoints
+                                .requestMatchers("/actuator/**")
+                                .permitAll() // Allow public access to certain endpoints
                                 .anyRequest().authenticated() // All other requests need to be authenticated
                 )
                 .sessionManagement(session -> session

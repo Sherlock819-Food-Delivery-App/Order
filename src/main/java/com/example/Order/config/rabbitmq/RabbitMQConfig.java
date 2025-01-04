@@ -14,25 +14,6 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
     private static final Logger log = LoggerFactory.getLogger(RabbitMQConfig.class);
 
-//    public static final String ORDER_EXCHANGE = "orderExchange";
-//
-//    @Bean
-//    public TopicExchange orderExchange() {
-//        return new TopicExchange(ORDER_EXCHANGE);
-//    }
-//
-//    @Bean
-//    public ConnectionFactory connectionFactory() {
-//        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost"); // replace with your RabbitMQ server address
-//        connectionFactory.setPort(5672); // default RabbitMQ port
-//        return connectionFactory;
-//    }
-//
-//    @Bean
-//    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-//        return new RabbitAdmin(connectionFactory);
-//    }
-
     @Value("${spring.rabbitmq.host}")
     private String host;
 
