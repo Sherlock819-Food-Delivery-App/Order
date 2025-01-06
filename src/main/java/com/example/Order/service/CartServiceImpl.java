@@ -2,11 +2,14 @@ package com.example.Order.service;
 
 import com.example.Order.model.Cart;
 import com.example.Order.model.CartItem;
+import com.example.Order.model.Order;
+import com.example.Order.model.OrderItem;
 import com.example.Order.repository.CartItemRepository;
 import com.example.Order.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,4 +79,25 @@ public class CartServiceImpl implements CartService {
     public void clearCart(String email) {
         cartRepository.findByEmail(email).ifPresent(cartRepository::delete);
     }
+
+    @Override
+    public Order convertCartToOrder(String email) {
+        Cart cart = cartRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + email));
+
+        Order order = new Order();
+        order.setEmail(cart.getEmail());
+        order.setRestaurantId(cart.getRestaurantId());
+        List<OrderItem> orderItems = cart.getCartItems().stream().map(cartItem -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setItemId(cartItem.getItemId());
+            orderItem.setName(cartItem.getName());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getPrice());
+            return orderItem;
+        }).toList();
+        order.setOrderItems(orderItems);
+        return order;
+    }
+
 }

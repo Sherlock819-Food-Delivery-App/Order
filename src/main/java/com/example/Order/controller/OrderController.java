@@ -2,6 +2,7 @@ package com.example.Order.controller;
 
 import com.example.Order.dto.OrderDTO;
 import com.example.Order.model.Order;
+import com.example.Order.service.CartService;
 import com.example.Order.service.OrderService;
 import com.example.Order.service.OrderServiceImpl;
 import com.example.Order.utilities.OrderMapper;
@@ -36,16 +37,28 @@ public class OrderController {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private CartService cartService;
+
+    @Autowired
     public OrderController(OrderServiceImpl orderServiceImpl, OrderMapper orderMapper) {
         this.orderServiceImpl = orderServiceImpl;
         this.orderMapper = orderMapper;
     }
 
+//    @PostMapping
+//    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+//        log.info("Creating order for user: {}", SecurityContextHolder.getContext().getAuthentication().getName());
+//        orderDTO.setEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+//        var order = orderMapper.toEntity(orderDTO);
+//        var createdOrder = orderServiceImpl.createOrder(order);
+//        return new ResponseEntity<>(orderMapper.toDTO(createdOrder), HttpStatus.CREATED);
+//    }
+
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        log.info("Creating order for user: {}", SecurityContextHolder.getContext().getAuthentication().getName());
-        orderDTO.setEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        var order = orderMapper.toEntity(orderDTO);
+    public ResponseEntity<OrderDTO> placeOrder() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Creating order for user: {}", email);
+        Order order = cartService.convertCartToOrder(email);
         var createdOrder = orderServiceImpl.createOrder(order);
         return new ResponseEntity<>(orderMapper.toDTO(createdOrder), HttpStatus.CREATED);
     }

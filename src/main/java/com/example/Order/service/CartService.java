@@ -2,6 +2,7 @@ package com.example.Order.service;
 
 import com.example.Order.model.Cart;
 import com.example.Order.model.CartItem;
+import com.example.Order.model.Order;
 
 import java.util.Optional;
 
@@ -15,4 +16,6 @@ public interface CartService {
     void updateItemInCart(String email, Long itemId);
 
     void clearCart(String email);
+
+    Order convertCartToOrder(String email);
 }
