@@ -18,17 +18,15 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final OrderRepository orderRepository;
-    private final OrderEventPublisher eventPublisher;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderEventPublisher eventPublisher;
+    @Autowired
+    private CartService cartService;
+
     private static final int MAX_RETRY_ATTEMPTS = 3;
     private static final long RETRY_DELAY = 1000L;
-
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository,
-                            OrderEventPublisher eventPublisher) {
-        this.orderRepository = orderRepository;
-        this.eventPublisher = eventPublisher;
-    }
 
     @Override
     public Order createOrder(Order order) {
@@ -42,6 +40,10 @@ public class OrderServiceImpl implements OrderService {
         }
         Order createdOrder = orderRepository.save(order);
         eventPublisher.publishOrderUpdate(createdOrder, createdOrder.getRestaurantId().toString());
+
+        // Clear the cart
+        cartService.clearCart(order.getEmail());
+
         return createdOrder;
     }
 
