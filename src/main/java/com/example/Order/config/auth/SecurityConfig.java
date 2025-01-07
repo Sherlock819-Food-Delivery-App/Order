@@ -28,6 +28,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS calls for specific endpoints
                                 .requestMatchers("/actuator/**")
                                 .permitAll() // Allow public access to certain endpoints
+                                .requestMatchers("/api/order-events/**").authenticated()
                                 .anyRequest().authenticated() // All other requests need to be authenticated
                 )
                 .sessionManagement(session -> session
